@@ -11,8 +11,8 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, List
 
 # Example schemas (replace with your own):
 
@@ -37,6 +37,35 @@ class Product(BaseModel):
     price: float = Field(..., ge=0, description="Price in dollars")
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
+
+# Portfolio-specific schemas
+
+class Project(BaseModel):
+    """
+    Portfolio projects
+    Collection name: "project"
+    """
+    title: str = Field(..., description="Project title")
+    summary: str = Field(..., description="Short description of the project")
+    tags: List[str] = Field(default_factory=list, description="Keywords/skills")
+    tech_stack: List[str] = Field(default_factory=list, description="Technologies used")
+    role: Optional[str] = Field(None, description="Your role on the project")
+    outcomes: Optional[str] = Field(None, description="Impact, metrics, or results")
+    image_url: Optional[str] = Field(None, description="Preview image URL")
+    repo_url: Optional[str] = Field(None, description="Source code repository URL")
+    demo_url: Optional[str] = Field(None, description="Live demo or report link")
+    year: Optional[int] = Field(None, description="Year completed")
+
+class Message(BaseModel):
+    """
+    Contact messages from the portfolio
+    Collection name: "message"
+    """
+    name: str = Field(..., description="Sender name")
+    email: EmailStr = Field(..., description="Sender email")
+    subject: Optional[str] = Field(None, description="Subject line")
+    message: str = Field(..., min_length=5, max_length=5000, description="Message body")
+    source_page: Optional[str] = Field(None, description="Where the message was sent from")
 
 # Add your own schemas here:
 # --------------------------------------------------
